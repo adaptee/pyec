@@ -41,10 +41,12 @@ def unpack_string(data):
     value = ""
     length = -1
 
+    # In EC protocol, string is alway terminated with \x00
     length = data.find('\x00')
     value = unicode(data[:length],"utf8")
 
-    return value, data[length:]
+    # skip that extra \x00
+    return value, data[length + 1 :]
 
 def unpack_hash16(data):
 
