@@ -10,7 +10,7 @@ def test_ECTag_0():
     # data -> 123
     tag = ECTag("client_version","uint8",123 )
 
-    result = tag.packup()
+    result = tag.pack()
     assert result ==  '\x02\x02\x02\x00\x01{'
 
     print "#OK"
@@ -37,7 +37,7 @@ def ECTag_creator( tagname, tagtype, tagdata):
 
     tag = ECTag(tagname, tagtype, tagdata)
 
-    result=tag.packup()
+    result=tag.pack()
     print result
     print "#OK with [%s, %s, %s ]" % (tagname, tagtype, tagdata)
     return tag

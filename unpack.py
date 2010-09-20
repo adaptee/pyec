@@ -5,36 +5,65 @@ from struct import unpack
 from codes2 import tags_rev
 from tagtypes2 import tagtypes, tagtypes_rev
 from tag2 import ECTag
+from packet2 import ECPacket
 
-def unpack_packet(data, utf8_num):
-    print data, utf8_num
+
+
+def unpack_packet(data, utf8_num=True ):
+
+    op, data       = unpack_op(data)
+
+    op = codes2.ops_rev[op]
+
+    tagcount, data = unpack_tagcount(data, utf8_num)
+
+    tags = [ ]
+
+    for i in range(tagcount):
+        tag, data = unpack_tag(data, utf8_num)
+        tags.append(tag)
+
+    assert len(data) == 0
+
+    return ECPacket( op, tags)
+
+
+def unpack_op(data):
+    length =  1
+    value, = unpack("!B",data[length:])
+
+    return value, data[length:]
+
+def unpack_tagcount(data, utf8_num=True ):
+
+    value  = -1
+    length = -1
+
+    if utf8_num:
+        #value, length = unpack_utf8_num(data)
+        return unpack_utf8_num(data)
+    else:
+        length = 2
+        value, = unpack( '!H', data[:length] )
+        return value, data[length:]
+
 
 
 def unpack_tag(data, utf8_num=True):
 
-    #tagname, tagname_len = unpack_tagname(data, utf8_num)
-    #data = data[tagname_len:]
     tagname, data = unpack_tagname(data, utf8_num)
 
     tagname, has_subtags, subtags = analyze_tagname(tagname)
 
-    #tagtype, tagtype_len = unpack_tagtype(data)
-    #data = data[tagtype_len:]
     tagtype, data = unpack_tagtype(data)
 
-    #taglen, taglen_len = unpack_taglength(data, utf8_num)
-    #data = data[taglen_len:]
     taglen, data = unpack_taglength(data, utf8_num)
 
     if has_subtags :
 
-        #subtags_count, subtags_count_len = unpack_subtags_count(data, utf8_num)
-        #data = data[subtags_count_len:]
         subtags_count, data = unpack_subtags_count(data, utf8_num)
 
         for i in range(subtags_count):
-            #subtag, subtag_len = unpack_tag(data, utf8_num)
-            #data = data[subtag_len:]
             subtag, data = unpack_tag(data, utf8_num)
             subtags.append(subtag)
 
@@ -45,7 +74,6 @@ def unpack_tag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    #return tag, taglen + tagname_len + tagtype_len + taglen_len
     return tag, data
 
 
@@ -67,12 +95,12 @@ def unpack_tagname(data, utf8_num=True):
     length = -1
 
     if utf8_num:
-        value, length = unpack_utf8_num(data)
+        #value, length = unpack_utf8_num(data)
+        return unpack_utf8_num(data)
     else:
         length = 2
         value, = unpack( '!H', data[:length] )
-
-    return value, data[length:]
+        return value, data[length:]
 
 # FIXME; this could be optimized as simply ' return  data[0], 1'
 def unpack_tagtype(data):
@@ -89,12 +117,12 @@ def unpack_taglength(data, utf8_num=True ):
     length = -1
 
     if utf8_num:
-        value, length = unpack_utf8_num(data)
+        #value, length = unpack_utf8_num(data)
+        return unpack_utf8_num(data)
     else:
         length = 4
         value, = unpack( '!L', data[:length] )
-
-    return value, data[length:]
+        return value, data[length:]
 
 
 def unpack_subtags_count(data, utf8_num=True ):
@@ -102,12 +130,12 @@ def unpack_subtags_count(data, utf8_num=True ):
     length = -1
 
     if utf8_num:
-        value, length = unpack_utf8_num(data)
+        #value, length = unpack_utf8_num(data)
+        return unpack_utf8_num(data)
     else:
         length = 2
         value, = unpack( '!H', data[:length] )
-
-    return value, data[length:]
+        return value, data[length:]
 
 def unpack_tagdata(data, tagtype):
 
@@ -127,23 +155,18 @@ def unpack_tagdata(data, tagtype):
         elif tagtype == tagtypes['uint64']:
             length = 8
 
-        #value, length = unpack_uint(data[:length])
         value, data = unpack_uint(data, length)
 
     elif tagtype == tagtypes['string']  :
-        #value, length = unpack_string(data)
         value, data = unpack_string(data)
 
     elif tagtype == tagtypes['hash16']:
-        #value, length = unpack_hash16(data[:length])
         value, data = unpack_hash16(data)
 
     elif tagtype == tagtypes['ipv4']:
-        #value, length = unpack_ipv4(data)
         value, data = unpack_ipv4(data)
 
     elif tagtype == tagtypes['double']:
-        #value, length = unpack_double(data)
         value, data = unpack_double(data)
 
     elif tagtype == tagtypes['custom']:
@@ -152,7 +175,6 @@ def unpack_tagdata(data, tagtype):
     elif tagtype == tagtypes['unknown']:
         raise ValueError("[unpack_tagdata] type 'unkonwn' is unsupported ")
 
-    #return value, length
     return value, data
 
 
@@ -187,7 +209,6 @@ def unpack_string(data):
     length = data.find('\x00')
     value = unicode(data[:length],"utf8")
 
-    #return value, length
     return value, data[length:]
 
 def unpack_hash16(data):
@@ -213,7 +234,6 @@ def unpack_ipv4(data):
 
     value =  "%d.%d.%d.%d:%d"% (p1, p2, p3, p4, port)
 
-    #return value, length
     return value, data[length:]
 
 def unpack_double(data):
@@ -237,6 +257,7 @@ def unpack_utf8_num(data):
         raise ValueError("%s not a valid unicode range" % hex(ord(data[0])))
 
     value = ord( data[:utf8_len].decode("utf-8"))
-    return value, utf8_len
+    #return value, utf8_len
+    return value, data[utf8_len:]
 
 

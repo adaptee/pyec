@@ -5,7 +5,6 @@
 import codes2
 
 from tagtypes2 import tagtypes
-#from pack import pack_number, pack_hash, pack_string, pack_double, pack_ipv4
 from pack import *
 
 
@@ -58,7 +57,7 @@ class ECTag:
             self.subtags = [ ]
         self.subtags.append(subtag)
 
-    def packup(self):
+    def pack(self):
         """create the binary representatio of this ECTag, which is used in
         communication"""
         self._assert()
@@ -102,7 +101,7 @@ class ECTag:
             count = len(self.subtags)
             result += pack_uint16(count)
             for subtag in self.subtags:
-                result += subtag.packup()
+                result += subtag.pack()
 
         return result
 

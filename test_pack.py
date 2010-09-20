@@ -96,7 +96,7 @@ def test_pack_unpack_single_tag():
     # data --> SVN
     tag_in = ECTag('client_version', 'string', u'SVN')
 
-    tag_bin = tag_in.packup()
+    tag_bin = tag_in.pack()
 
     tag_out, len = unpack_tag(tag_bin, False)
 
@@ -113,7 +113,7 @@ def test_pack_unpack_complex_tag():
     subtags = [ subtag1, subtag2, subtag3]
     maintag  = ECTag('server', 'string', "aMule Server No2", subtags)
 
-    maintag_bin = maintag.packup()
+    maintag_bin = maintag.pack()
 
 
     maintag_out ,length  = unpack_tag(maintag_bin, False)
