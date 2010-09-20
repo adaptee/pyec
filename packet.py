@@ -105,9 +105,12 @@ def decode_status(tags):
                     "client_id"   : 0, \
                     "id"          : "", \
                     "kad_firewall": ""  \
-                } \
+                }
              }
+    print "[debug] this packet contain %d tags" % len(tags)
     for tag in tags:
+        print tag
+        print "\n"
         tag_type = tag[0]
         value = tag[1]
         if (tag_type == codes.tag['stats_ul_speed']):

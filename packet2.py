@@ -72,13 +72,10 @@ def unpack_ecpacket(data, utf8_num=True ):
         tag, data = unpack_ectag(data, utf8_num)
         tags.append(tag)
 
-    assert len(data) == 0
-
     return ECPacket( op, tags)
 
 def unpack_ecpacket_op(data):
     length =  1
-    #value, = unpack("!B",data[length:])
     value, _= unpack_uint8(data)
 
     return value, data[length:]
@@ -89,11 +86,9 @@ def unpack_ecpacket_tagcount(data, utf8_num=True ):
     length = -1
 
     if utf8_num:
-        #value, length = unpack_utf8_num(data)
         return unpack_utf8_num(data)
     else:
         length = 2
-        #value, = unpack( '!H', data[:length] )
         value, _ = unpack_uint16( data )
         return value, data[length:]
 

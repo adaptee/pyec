@@ -92,7 +92,6 @@ def unpack_utf8_num(data):
         raise ValueError("%s not a valid unicode range" % hex(ord(data[0])))
 
     value = ord( data[:utf8_len].decode("utf-8"))
-    #return value, utf8_len
     return value, data[utf8_len:]
 
 

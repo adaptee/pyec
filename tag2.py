@@ -7,7 +7,6 @@ from unpack import *
 import struct
 
 import codes2
-#from tagtypes2 import tagtypes, tagtypes_rev
 
 class ECTag:
 
@@ -154,6 +153,7 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
+    print tag.debugrepr()
     return tag, data
 
 
@@ -175,7 +175,6 @@ def unpack_ectag_tagname(data, utf8_num=True):
     length = -1
 
     if utf8_num:
-        #value, length = unpack_utf8_num(data)
         return unpack_utf8_num(data)
     else:
         length = 2
@@ -197,7 +196,6 @@ def unpack_ectag_taglen(data, utf8_num=True ):
     length = -1
 
     if utf8_num:
-        #value, length = unpack_utf8_num(data)
         return unpack_utf8_num(data)
     else:
         length = 4
@@ -210,7 +208,6 @@ def unpack_ectag_subtag_count(data, utf8_num=True ):
     length = -1
 
     if utf8_num:
-        #value, length = unpack_utf8_num(data)
         return unpack_utf8_num(data)
     else:
         length = 2

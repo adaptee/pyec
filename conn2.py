@@ -15,6 +15,22 @@ class ConnectionFailedError(Exception):
     def __str__(self):
         return repr(self.error)
 
+def create_salted_passwd_hash(passwd, salt):
+
+    salt = "%lX" % (salt)
+
+    passwd_hash = md5(passwd).hexdigest()
+    salt_hash   = md5(salt).hexdigest()
+    return md5( (passwd_hash.lower() + salt_hash ) ).digest()
+
+
+def create_ecpacket_status_req():
+
+    return ECPacket( 'stat_req',
+                     [ ECTag('detail_level', 'uint8', codes2.details['cmd']),  ]
+                   )
+
+
 class ECConnection:
     """Remote-control aMule(d) using "External connections."""
     def __init__(self, password, host="localhost", port=4712, app="pyEC",
@@ -51,8 +67,23 @@ class ECConnection:
 
         auth_reply = self.send_and_recv_ecpacket(auth_req)
 
+
         print auth_reply.op
         print auth_reply.debugrepr()
+        print auth_reply.tags[0].tagdata
+
+        salt = auth_reply.tags[0].tagdata
+        print "[debug] salt: %s" % salt
+        saltpasswd_req = self._create_ecpacket_saltpasswd(salt)
+
+        saltpasswd_reply = self.send_and_recv_ecpacket(saltpasswd_req)
+        print saltpasswd_reply.debugrepr()
+
+
+        status_req = create_ecpacket_status_req()
+        status_reply = self.send_and_recv_ecpacket(status_req)
+        print status_reply.debugrepr()
+
 
     def _create_ecpacket_authreq(self):
         pass
@@ -60,18 +91,19 @@ class ECConnection:
         tags = []
 
         tags.append(ECTag('client_name', 'string', self.app  ) )
-        tags.append(ECTag('client_version', 'string', unicode(self.version)  ) )
+        tags.append(ECTag('client_version', 'string', self.version  ) )
         tags.append(ECTag('protocol_version', 'uint16', codes2.protocol_version  ) )
         tags.append(ECTag('passwd_hash', 'hash16', md5(self.password).digest()  ) )
 
         return ECPacket('auth_req', tags)
 
+    def _create_ecpacket_saltpasswd(self, salt):
 
-        #return ECPacket((codes.op['auth_req'],
-                #[(codes.tag['client_name'],      unicode(app)),
-                #(codes.tag['client_version'],   unicode(version)),
-                #(codes.tag['protocol_version'], codes.protocol_version),
-                #(codes.tag['passwd_hash'],      md5(password).digest())
+        salted_passwd_hash = create_salted_passwd_hash(self.password, salt)
+
+        return ECPacket('auth_passwd',
+                        [ ECTag('passwd_hash', 'hash16', salted_passwd_hash), ]
+                        )
 
 
     def __del__(self):
