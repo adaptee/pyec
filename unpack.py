@@ -2,183 +2,7 @@
 # vim: set fileencoding=utf-8 :
 
 from struct import unpack
-from codes2 import tags_rev
-from tagtypes2 import tagtypes, tagtypes_rev
-from tag2 import ECTag
-from packet2 import ECPacket
 
-
-
-def unpack_packet(data, utf8_num=True ):
-
-    op, data       = unpack_op(data)
-
-    op = codes2.ops_rev[op]
-
-    tagcount, data = unpack_tagcount(data, utf8_num)
-
-    tags = [ ]
-
-    for i in range(tagcount):
-        tag, data = unpack_tag(data, utf8_num)
-        tags.append(tag)
-
-    assert len(data) == 0
-
-    return ECPacket( op, tags)
-
-
-def unpack_op(data):
-    length =  1
-    value, = unpack("!B",data[length:])
-
-    return value, data[length:]
-
-def unpack_tagcount(data, utf8_num=True ):
-
-    value  = -1
-    length = -1
-
-    if utf8_num:
-        #value, length = unpack_utf8_num(data)
-        return unpack_utf8_num(data)
-    else:
-        length = 2
-        value, = unpack( '!H', data[:length] )
-        return value, data[length:]
-
-
-
-def unpack_tag(data, utf8_num=True):
-
-    tagname, data = unpack_tagname(data, utf8_num)
-
-    tagname, has_subtags, subtags = analyze_tagname(tagname)
-
-    tagtype, data = unpack_tagtype(data)
-
-    taglen, data = unpack_taglength(data, utf8_num)
-
-    if has_subtags :
-
-        subtags_count, data = unpack_subtags_count(data, utf8_num)
-
-        for i in range(subtags_count):
-            subtag, data = unpack_tag(data, utf8_num)
-            subtags.append(subtag)
-
-    tagdata, data = unpack_tagdata(data, tagtype)
-
-    tagname =  tags_rev[tagname]
-    tagtype =  tagtypes_rev[tagtype]
-
-    tag = ECTag(tagname, tagtype, tagdata, subtags)
-
-    return tag, data
-
-
-def analyze_tagname(tagname):
-    # if the lowest bit set, then subtags exist
-    if (tagname % 2) == 1:
-        has_subtags = True
-        subtags = [ ]
-    else:
-        has_subtags = False
-        subtags = None
-
-    return tagname / 2, has_subtags, subtags
-
-# uint16 need to take care of utf-8-lized number
-def unpack_tagname(data, utf8_num=True):
-
-    value  = -1
-    length = -1
-
-    if utf8_num:
-        #value, length = unpack_utf8_num(data)
-        return unpack_utf8_num(data)
-    else:
-        length = 2
-        value, = unpack( '!H', data[:length] )
-        return value, data[length:]
-
-# FIXME; this could be optimized as simply ' return  data[0], 1'
-def unpack_tagtype(data):
-    value  = -1
-    length = 1
-
-    value, = unpack('!B', data[:length])
-
-    return value, data[length:]
-
-# uint32 need to take care of utf-8-lized number
-def unpack_taglength(data, utf8_num=True ):
-    value  = -1
-    length = -1
-
-    if utf8_num:
-        #value, length = unpack_utf8_num(data)
-        return unpack_utf8_num(data)
-    else:
-        length = 4
-        value, = unpack( '!L', data[:length] )
-        return value, data[length:]
-
-
-def unpack_subtags_count(data, utf8_num=True ):
-    value  = -1
-    length = -1
-
-    if utf8_num:
-        #value, length = unpack_utf8_num(data)
-        return unpack_utf8_num(data)
-    else:
-        length = 2
-        value, = unpack( '!H', data[:length] )
-        return value, data[length:]
-
-def unpack_tagdata(data, tagtype):
-
-    value  = -1
-    length = -1
-
-    if tagtype in [ tagtypes['uint8'] ,
-                    tagtypes['uint16'],
-                    tagtypes['uint32'],
-                    tagtypes['uint64'] ]:
-
-        length = 1
-        if tagtype == tagtypes['uint16']:
-            length = 2
-        elif tagtype == tagtypes['uint32']:
-            length = 4
-        elif tagtype == tagtypes['uint64']:
-            length = 8
-
-        value, data = unpack_uint(data, length)
-
-    elif tagtype == tagtypes['string']  :
-        value, data = unpack_string(data)
-
-    elif tagtype == tagtypes['hash16']:
-        value, data = unpack_hash16(data)
-
-    elif tagtype == tagtypes['ipv4']:
-        value, data = unpack_ipv4(data)
-
-    elif tagtype == tagtypes['double']:
-        value, data = unpack_double(data)
-
-    elif tagtype == tagtypes['custom']:
-        raise ValueError("[unpack_tagdata] type 'custom' is unsupported ")
-
-    elif tagtype == tagtypes['unknown']:
-        raise ValueError("[unpack_tagdata] type 'unkonwn' is unsupported ")
-
-    return value, data
-
-
-#def unpack_uint(data):
 def unpack_uint(data, length):
 
     assert len(data) >= length
@@ -201,6 +25,17 @@ def unpack_uint(data, length):
 
     return value, data[length:]
 
+def unpack_uint8(data):
+    return unpack_uint(data, 1)
+
+def unpack_uint16(data):
+    return unpack_uint(data, 2)
+
+def unpack_uint32(data):
+    return unpack_uint(data, 4)
+
+def unpack_uint64(data):
+    return unpack_uint(data, 8)
 
 def unpack_string(data):
     value = ""

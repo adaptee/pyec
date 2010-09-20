@@ -3,7 +3,7 @@
 
 from struct import pack
 
-def addr2number(addr):
+def ipv4addr2num(addr):
 
     ip, port = addr.split(':')
 
@@ -29,9 +29,9 @@ def pack_hash(hash):
 
     return hash
 
-def pack_ipv4(addr):
+def pack_ipv4(ipv4addr):
 
-    ipv4, port = addr2number(addr)
+    ipv4, port = ipv4addr2num(ipv4addr)
 
     return pack("!LH", ipv4, port)
 
@@ -55,30 +55,15 @@ def pack_uint(number, tagtype):
 
     return value
 
-    #if number < pow(2, 8):
-        #return pack_uint8(number)
-    #elif number < pow(2, 16):
-        #return pack_uint16(number)
-    #elif number < pow(2, 32):
-        #return pack_uint32(number)
-    #elif number < pow(2, 64):
-        #return pack_uint64(number)
-    #else:
-        #raise TypeError('value %d is too big' % number)
-
-
 def pack_uint8(number):
     return pack_uint(number, 'uint8')
 
 def pack_uint16(number):
     return pack_uint(number, 'uint16')
-    #return pack("!H", number)
 
 def pack_uint32(number):
     return pack_uint(number, 'uint32')
-    #return pack("!L", number)
 
 def pack_uint64(number):
     return pack_uint(number, 'uint64')
-    #return pack("!Q", number)
 

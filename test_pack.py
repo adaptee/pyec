@@ -3,7 +3,8 @@
 
 from pack import *
 from unpack import *
-from tag2 import ECTag
+from tag2 import ECTag, unpack_ectag
+
 
 def test_pack_string_success():
     print pack_string(u'test')
@@ -98,7 +99,7 @@ def test_pack_unpack_single_tag():
 
     tag_bin = tag_in.pack()
 
-    tag_out, len = unpack_tag(tag_bin, False)
+    tag_out, len = unpack_ectag(tag_bin, False)
 
     assert tag_in.tagname == tag_out.tagname
     print tag_out.tagname, tag_out.tagtype, tag_out.tagdata
@@ -116,7 +117,7 @@ def test_pack_unpack_complex_tag():
     maintag_bin = maintag.pack()
 
 
-    maintag_out ,length  = unpack_tag(maintag_bin, False)
+    maintag_out ,length  = unpack_ectag(maintag_bin, False)
 
 
     print "tagname: %s" % maintag_out.tagname
