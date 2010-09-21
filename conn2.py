@@ -109,36 +109,39 @@ class ECConnection:
         saltpasswd_reply = self.send_and_recv_ecpacket(saltpasswd_req)
         print saltpasswd_reply.debugrepr()
 
+        # FIXME
+        #status_req = create_ecpacket_status_req()
+        #status_reply = self.send_and_recv_ecpacket(status_req)
+        #print status_reply.debugrepr()
 
-        status_req = create_ecpacket_status_req()
-        status_reply = self.send_and_recv_ecpacket(status_req)
-        print status_reply.debugrepr()
+        # FIXME
+        #get_connstat_req = create_ecpacket_get_connstat_req()
+        #get_connstat_reply = self.send_and_recv_ecpacket(get_connstat_req)
+        #print get_connstat_reply.debugrepr()
 
-
-        get_connstat_req = create_ecpacket_get_connstat_req()
-        get_connstat_reply = self.send_and_recv_ecpacket(get_connstat_req)
-        print get_connstat_reply.debugrepr()
-
+        # FIXME
         request= create_ecpacket_get_server_list ()
         reply = self.send_and_recv_ecpacket(request)
         print reply.debugrepr()
 
-        request= create_ecpacket_get_log ()
-        reply = self.send_and_recv_ecpacket(request)
-        print reply.debugrepr()
+        #request= create_ecpacket_get_log ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
 
-        request= create_ecpacket_get_debug_log ()
-        reply = self.send_and_recv_ecpacket(request)
-        print reply.debugrepr()
+        #request= create_ecpacket_get_debug_log ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
 
-        request= create_ecpacket_get_serverinfo ()
-        reply = self.send_and_recv_ecpacket(request)
-        print reply.debugrepr()
+        #request= create_ecpacket_get_serverinfo ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
 
-        request= create_ecpacket_get_dload_queue ()
-        reply = self.send_and_recv_ecpacket(request)
-        print reply.debugrepr()
+        # FIXME
+        #request= create_ecpacket_get_dload_queue ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
 
+        # FIXME
         #request= create_ecpacket_get_shared_files ()
         #reply = self.send_and_recv_ecpacket(request)
         #print reply.debugrepr()
