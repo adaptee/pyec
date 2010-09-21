@@ -30,6 +30,42 @@ def create_ecpacket_status_req():
                      [ ECTag('detail_level', 'uint8', codes2.details['cmd']),  ]
                    )
 
+def create_ecpacket_get_connstat_req():
+
+    return ECPacket( 'get_connstate',
+                     []
+                    )
+
+def create_ecpacket_get_server_list():
+    return ECPacket( 'get_server_list',
+                     []
+                    )
+
+def create_ecpacket_get_log():
+    return ECPacket( 'get_log',
+                     []
+                    )
+
+def create_ecpacket_get_debug_log():
+    return ECPacket( 'get_debuglog',
+                     []
+                    )
+
+def create_ecpacket_get_serverinfo():
+    return ECPacket( 'get_serverinfo',
+                     []
+                    )
+
+def create_ecpacket_get_dload_queue():
+    return ECPacket( 'get_dload_queue',
+                     []
+                    )
+
+def create_ecpacket_get_shared_files():
+    return ECPacket( 'get_shared_files',
+                     []
+                    )
+
 
 class ECConnection:
     """Remote-control aMule(d) using "External connections."""
@@ -64,25 +100,49 @@ class ECConnection:
         pass
 
         auth_req = self._create_ecpacket_authreq()
-
         auth_reply = self.send_and_recv_ecpacket(auth_req)
-
-
-        print auth_reply.op
         print auth_reply.debugrepr()
-        print auth_reply.tags[0].tagdata
 
         salt = auth_reply.tags[0].tagdata
-        print "[debug] salt: %s" % salt
+        #print "[debug] salt: %s" % salt
         saltpasswd_req = self._create_ecpacket_saltpasswd(salt)
-
         saltpasswd_reply = self.send_and_recv_ecpacket(saltpasswd_req)
         print saltpasswd_reply.debugrepr()
 
 
-        status_req = create_ecpacket_status_req()
-        status_reply = self.send_and_recv_ecpacket(status_req)
-        print status_reply.debugrepr()
+        #status_req = create_ecpacket_status_req()
+        #status_reply = self.send_and_recv_ecpacket(status_req)
+        #print status_reply.debugrepr()
+
+
+        #get_connstat_req = create_ecpacket_get_connstat_req()
+        #get_connstat_reply = self.send_and_recv_ecpacket(get_connstat_req)
+        #print get_connstat_reply.debugrepr()
+
+        #request= create_ecpacket_get_server_list ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
+
+        #request= create_ecpacket_get_log ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
+
+        #request= create_ecpacket_get_debug_log ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
+
+        #request= create_ecpacket_get_serverinfo ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
+
+        request= create_ecpacket_get_dload_queue ()
+        reply = self.send_and_recv_ecpacket(request)
+        print reply.debugrepr()
+
+        #request= create_ecpacket_get_shared_files ()
+        #reply = self.send_and_recv_ecpacket(request)
+        #print reply.debugrepr()
+
 
 
     def _create_ecpacket_authreq(self):

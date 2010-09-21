@@ -37,7 +37,9 @@ def unpack_uint32(data):
 def unpack_uint64(data):
     return unpack_uint(data, 8)
 
+# note, alwasy return unicode string
 def unpack_string(data):
+
     value = ""
     length = -1
 
@@ -76,8 +78,13 @@ def unpack_ipv4(data):
 def unpack_double(data):
     return unpack_string(data)
 
-#def unpack_custom(data):
-    #return data, len(data)
+def unpack_custom(data, length):
+
+    assert len(dat) >= length
+
+    custom = data[:needed_len]
+
+    return custom, data[length:]
 
 def unpack_utf8_num(data):
 

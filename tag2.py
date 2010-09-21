@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-
-from pack import *
-from unpack import *
 import struct
 
 import codes2
+from pack import *
+from unpack import *
+from misc import indentext
+
 
 class ECTag:
 
@@ -22,18 +23,42 @@ class ECTag:
         assert self.tagtype in codes2.tagtypes.keys()
 
 
-    def debugrepr (self):
+    def debugrepr (self, indent_level=0 ):
         result = ""
-        result += "tagname: %s\n" % self.tagname
-        result += "tagtype: %s\n" % self.tagtype
+
+        result += indentext( self._tagname_debugrepr(), indent_level)
+        result += indentext( self._tagtype_debugrepr(), indent_level)
 
         if self.subtags:
+            result += indentext( "subtags: %d\n" % len(self.subtags),
+                    indent_level )
             for tag in self.subtags:
-                result += tag.debugrepr()
+                result += tag.debugrepr(indent_level + 1)
 
-        result += "tagdata: %s\n" % str(self.tagdata)
+        result += indentext (self._tagdata_debugrepr(), indent_level )
+        result += "\n"
 
         return result
+
+    def _tagname_debugrepr(self):
+        tagnamecode = codes2.tags[self.tagname]
+
+        return "tagname: %s | %s \n" % ( self.tagname, hex(tagnamecode) )
+
+    def _tagtype_debugrepr(self):
+        tagtypecode = codes2.tagtypes[self.tagtype]
+
+        return "tagtype: %s | %s \n" % ( self.tagtype, hex(tagtypecode) )
+
+    def _tagdata_debugrepr(self):
+
+        # since strings are always stored as unicode string,
+        # special treatment is need here.
+        if self.tagtype == 'string':
+            #return self.tagdata
+            return unicode.encode(self.tagdata, "utf-8")
+        else:
+            return str(self.tagdata)
 
     def setname(self, tagname):
         assert tagname in codes2.tags.keys()
@@ -153,7 +178,6 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    print tag.debugrepr()
     return tag, data
 
 
@@ -248,6 +272,7 @@ def unpack_ectag_tagdata(data, tagtype):
 
     elif tagtype == codes2.tagtypes['custom']:
         raise ValueError("[unpack_ectag_tagdata] type 'custom' is unsupported ")
+        #value, data = unpack_custom(data, length)
 
     elif tagtype == codes2.tagtypes['unknown']:
         raise ValueError("[unpack_ectag_tagdata] type 'unkonwn' is unsupported ")

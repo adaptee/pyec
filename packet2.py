@@ -8,28 +8,40 @@ import codes2
 from pack import *
 from unpack import unpack_uint8, unpack_uint16
 from tag2 import unpack_ectag
+from misc import indentext
 
 class ECPacket:
     def __init__(self, op, tags=None):
         self.op   = op
+
+        # for self.tags, 'None' and '[ ] 'have different meaning
+        # None means not corrected initializd, some bug exist else where
+        # [ ] means thia ecpacket does not contain tags
         self.tags = tags
 
     def _assert(self):
         assert self.op in codes2.ops.keys()
-        assert self.tags
+        assert self.tags != None
 
-    def debugrepr(self):
+    def debugrepr(self, indent_level=0 ):
 
         self._assert()
 
         result = ""
-        result += "op: %s \n" % self.op
-        result += "tagcount: %d \n" % len(self.tags)
+        result += indentext( self._op_debugrepr(), indent_level )
+        result += indentext( "tagcount: %d \n" % len(self.tags), indent_level )
 
         for tag in self.tags:
-            result += tag.debugrepr()
+            result += tag.debugrepr(indent_level + 1)
 
         return result
+
+
+    def _op_debugrepr(self):
+        opcode = codes2.ops[self.op]
+        #return "op: %s | %s | %d \n" % ( self.op, hex(opcode), opcode )
+        return "op: %s | %s \n" % ( self.op, hex(opcode), )
+        #return "op: %s \n" % ( self.op, )
 
     def settags(self, tags):
         assert tags;
