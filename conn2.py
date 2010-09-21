@@ -134,13 +134,13 @@ class ECConnection:
         print reply.debugrepr()
 
         #FIXME
-        request= create_ecpacket_get_dload_queue ()
-        reply = self.send_and_recv_ecpacket(request)
+        #request= create_ecpacket_get_dload_queue ()
+        #reply = self.send_and_recv_ecpacket(request)
         #print reply.debugrepr()
 
         # FIXME
-        #request= create_ecpacket_get_shared_files ()
-        #reply = self.send_and_recv_ecpacket(request)
+        request= create_ecpacket_get_shared_files ()
+        reply = self.send_and_recv_ecpacket(request)
         #print reply.debugrepr()
 
 

@@ -91,15 +91,16 @@ class ECTag:
 
         result += self._pack_name()
         result += self._pack_type()
+        result += self._pack_count()
 
-        subtags = self._pack_subtags()
-        tagdata = self._pack_data()
+        subtags_bin = self._pack_subtags()
+        tagdata_bin = self._pack_data()
 
-        length = len(subtags) + len(tagdata)
-        result += pack_uint32(length)
+        taglen = len(subtags_bin) + len(tagdata_bin)
 
-        result += subtags
-        result += tagdata
+        result += pack_uint32(taglen)
+        result += subtags_bin
+        result += tagdata_bin
 
         return result
 
@@ -118,13 +119,20 @@ class ECTag:
     def _pack_type(self):
         return pack_uint8(codes2.tagtypes[self.tagtype])
 
+    def _pack_count(self):
+        result = ""
+
+        if self.subtags :
+            result +=  pack_uint16( len(self.subtags) )
+
+        return result
+
+
     def _pack_subtags(self):
 
         result = ""
 
         if self.subtags:
-            count = len(self.subtags)
-            result += pack_uint16(count)
             for subtag in self.subtags:
                 result += subtag.pack()
 
