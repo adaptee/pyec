@@ -168,8 +168,9 @@ def unpack_ectag(data, utf8_num=True):
 
         tagcount, data = unpack_ectag_tagcount(data, utf8_num)
 
-        # filed tagcount always consumes 2 bytes
-        consumed_len += 2
+        # CATCH! the value of field taglen did not take optional field tagcount
+        # into consideration
+        # consumed_len += 2
 
         for i in range(tagcount):
             subtag, data, advance = unpack_ectag(data, utf8_num)
@@ -178,6 +179,7 @@ def unpack_ectag(data, utf8_num=True):
 
     tagdata_len = taglen - consumed_len
 
+    #print "[debug] tagdata_len: %d" % tagdata_len
     tagdata, data = unpack_ectag_tagdata(data, tagtype, tagdata_len)
 
     tagname =  codes2.tags_rev[tagname]
@@ -185,7 +187,11 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    # tagname: 4 bytes, tagtype:1 bytes, taglen: 4 bytes
+    print tag.debugrepr()
+
+    # tagname: 2 bytes
+    # tagtype: 1 bytes
+    # taglen:  4 bytes
     return tag, data, taglen + 2 + 1 + 4
 
 

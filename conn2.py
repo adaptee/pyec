@@ -115,11 +115,10 @@ class ECConnection:
         #print status_reply.debugrepr()
 
         # FIXME
-        #get_connstat_req = create_ecpacket_get_connstat_req()
-        #get_connstat_reply = self.send_and_recv_ecpacket(get_connstat_req)
-        #print get_connstat_reply.debugrepr()
+        get_connstat_req = create_ecpacket_get_connstat_req()
+        get_connstat_reply = self.send_and_recv_ecpacket(get_connstat_req)
+        print get_connstat_reply.debugrepr()
 
-        # FIXME
         request= create_ecpacket_get_server_list ()
         reply = self.send_and_recv_ecpacket(request)
         print reply.debugrepr()

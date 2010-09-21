@@ -67,6 +67,8 @@ def unpack_hash16(data, length):
 
 def unpack_ipv4(data, length ):
 
+    print "[debug] [unpack_ipv4] parameter length: %d" % length
+
     assert len(data) >= length
 
     ipv4, port = unpack("!IH", data[:6])
