@@ -254,27 +254,19 @@ def unpack_ectag_tagdata(data, tagtype, length):
                     codes2.tagtypes['uint32'],
                     codes2.tagtypes['uint64'] ]:
 
-        #length = 1
-        #if tagtype == codes2.tagtypes['uint16']:
-            #length = 2
-        #elif tagtype == codes2.tagtypes['uint32']:
-            #length = 4
-        #elif tagtype == codes2.tagtypes['uint64']:
-            #length = 8
-
         value, data = unpack_uint(data, length)
 
     elif tagtype == codes2.tagtypes['string']  :
-        value, data = unpack_string(data)
+        value, data = unpack_string(data, length)
 
     elif tagtype == codes2.tagtypes['hash16']:
-        value, data = unpack_hash16(data)
+        value, data = unpack_hash16(data, length)
 
     elif tagtype == codes2.tagtypes['ipv4']:
-        value, data = unpack_ipv4(data)
+        value, data = unpack_ipv4(data, length)
 
     elif tagtype == codes2.tagtypes['double']:
-        value, data = unpack_double(data)
+        value, data = unpack_double(data, length)
 
     elif tagtype == codes2.tagtypes['custom']:
         raise ValueError("[unpack_ectag_tagdata] type 'custom' is unsupported ")

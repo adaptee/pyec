@@ -73,7 +73,7 @@ def test_unpack_uint_invalid():
 def test_unpack_string():
     test_in = u'Die Welt ist rund.'
     test_bin = pack_string(test_in)
-    test_out, length = unpack_string(test_bin)
+    test_out, length = unpack_string(test_bin, len(test_bin) )
     assert test_out == test_in
 
 
@@ -86,7 +86,7 @@ def test_unpack_hash():
 def test_unpack_ipv4():
     test_in = '192.168.1.37:9527'
     test_bin = pack_ipv4(test_in)
-    test_out, length = unpack_ipv4(test_bin)
+    test_out, length = unpack_ipv4(test_bin, len(test_bin) )
     assert test_out == test_in
     print test_out
 
@@ -99,7 +99,7 @@ def test_pack_unpack_single_tag():
 
     tag_bin = tag_in.pack()
 
-    tag_out, len = unpack_ectag(tag_bin, False)
+    tag_out, len, _ = unpack_ectag(tag_bin, False)
 
     assert tag_in.tagname == tag_out.tagname
     print tag_out.tagname, tag_out.tagtype, tag_out.tagdata
@@ -117,7 +117,7 @@ def test_pack_unpack_complex_tag():
     maintag_bin = maintag.pack()
 
 
-    maintag_out ,length  = unpack_ectag(maintag_bin, False)
+    maintag_out ,length, _  = unpack_ectag(maintag_bin, False)
 
 
     print "tagname: %s" % maintag_out.tagname

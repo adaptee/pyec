@@ -38,21 +38,26 @@ def unpack_uint64(data):
     return unpack_uint(data, 8)
 
 # note, alwasy return unicode string
-def unpack_string(data):
+def unpack_string(data, length):
+
+    assert len(data) >= length
 
     value = ""
-    length = -1
 
-    # In EC protocol, string is alway terminated with \x00
-    length = data.find('\x00')
-    value = unicode(data[:length],"utf8")
+    # In EC protocol, string SHOULD always be terminated with \x00
+    index = data.find('\x00')
+    # confirm that!
+    assert (index + 1) == length
+
+    value = unicode(data[:index],"utf8")
+
 
     # skip that extra \x00
-    return value, data[length + 1 :]
+    return value, data[index + 1 :]
 
-def unpack_hash16(data):
+def unpack_hash16(data, length):
 
-    length = 16
+    assert length == 16
 
     if len(data) < length:
         raise ValueError("[unpack_hash16] Expected length 16, got length %d"
@@ -60,9 +65,8 @@ def unpack_hash16(data):
 
     return data, data[length:]
 
-def unpack_ipv4(data):
+def unpack_ipv4(data, length ):
 
-    length = 6
     assert len(data) >= length
 
     ipv4, port = unpack("!IH", data[:6])
@@ -75,7 +79,7 @@ def unpack_ipv4(data):
 
     return value, data[length:]
 
-def unpack_double(data):
+def unpack_double(data, length):
     return unpack_string(data)
 
 def unpack_custom(data, length):
