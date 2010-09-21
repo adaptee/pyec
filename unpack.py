@@ -86,9 +86,9 @@ def unpack_double(data, length):
 
 def unpack_custom(data, length):
 
-    assert len(dat) >= length
+    assert len(data) >= length
 
-    custom = data[:needed_len]
+    custom = data[:length]
 
     return custom, data[length:]
 

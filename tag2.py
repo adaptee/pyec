@@ -192,7 +192,8 @@ def unpack_ectag(data, utf8_num=True):
     # tagname: 2 bytes
     # tagtype: 1 bytes
     # taglen:  4 bytes
-    return tag, data, taglen + 2 + 1 + 4
+    # tagcount : optional 2 bytes
+    return tag, data, taglen + 2 + 1 + 4 + ( 2 if has_subtags else 0 )
 
 
 def analyze_ectag_tagname(tagname):
@@ -275,8 +276,8 @@ def unpack_ectag_tagdata(data, tagtype, length):
         value, data = unpack_double(data, length)
 
     elif tagtype == codes2.tagtypes['custom']:
-        raise ValueError("[unpack_ectag_tagdata] type 'custom' is unsupported ")
-        #value, data = unpack_custom(data, length)
+        #raise ValueError("[unpack_ectag_tagdata] type 'custom' is unsupported ")
+        value, data = unpack_custom(data, length)
 
     elif tagtype == codes2.tagtypes['unknown']:
         raise ValueError("[unpack_ectag_tagdata] type 'unkonwn' is unsupported ")
