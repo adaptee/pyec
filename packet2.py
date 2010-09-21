@@ -81,7 +81,7 @@ def unpack_ecpacket(data, utf8_num=True ):
     tags = [ ]
 
     for i in range(tagcount):
-        tag, data = unpack_ectag(data, utf8_num)
+        tag, data, _ = unpack_ectag(data, utf8_num)
         tags.append(tag)
 
     return ECPacket( op, tags)

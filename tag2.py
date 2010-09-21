@@ -156,33 +156,41 @@ class ECTag:
 def unpack_ectag(data, utf8_num=True):
 
     tagname, data = unpack_ectag_tagname(data, utf8_num)
-
     tagname, has_subtags, subtags = analyze_ectag_tagname(tagname)
 
     tagtype, data = unpack_tagtype(data)
 
-    taglen, data = unpack_ectag_taglen(data, utf8_num)
+    taglen,  data = unpack_ectag_taglen(data, utf8_num)
+
+    consumed_len = 0
 
     if has_subtags :
 
-        subtags_count, data = unpack_ectag_subtag_count(data, utf8_num)
+        tagcount, data = unpack_ectag_tagcount(data, utf8_num)
 
-        for i in range(subtags_count):
-            subtag, data = unpack_ectag(data, utf8_num)
+        # filed tagcount always consumes 2 bytes
+        consumed_len += 2
+
+        for i in range(tagcount):
+            subtag, data, advance = unpack_ectag(data, utf8_num)
             subtags.append(subtag)
+            consumed_len += advance
 
-    tagdata, data = unpack_ectag_tagdata(data, tagtype)
+    tagdata_len = taglen - consumed_len
+
+    tagdata, data = unpack_ectag_tagdata(data, tagtype, tagdata_len)
 
     tagname =  codes2.tags_rev[tagname]
     tagtype =  codes2.tagtypes_rev[tagtype]
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    return tag, data
+    # tagname: 4 bytes, tagtype:1 bytes, taglen: 4 bytes
+    return tag, data, taglen + 2 + 1 + 4
 
 
 def analyze_ectag_tagname(tagname):
-    # if the lowest bit set, then subtags exist
+    # if the lowest bit set, then this tag contins subtags
     if (tagname % 2) == 1:
         has_subtags = True
         subtags = [ ]
@@ -190,7 +198,7 @@ def analyze_ectag_tagname(tagname):
         has_subtags = False
         subtags = None
 
-    return tagname / 2, has_subtags, subtags
+    return tagname/2, has_subtags, subtags
 
 # uint16 need to take care of utf-8-lized number
 def unpack_ectag_tagname(data, utf8_num=True):
@@ -210,7 +218,7 @@ def unpack_tagtype(data):
     value  = -1
     length = 1
 
-    value, = unpack('!B', data[:length])
+    value, _ = unpack_uint8(data)
 
     return value, data[length:]
 
@@ -223,38 +231,36 @@ def unpack_ectag_taglen(data, utf8_num=True ):
         return unpack_utf8_num(data)
     else:
         length = 4
-        value, = unpack( '!L', data[:length] )
+        value, _ = unpack_uint32(data)
         return value, data[length:]
 
 
-def unpack_ectag_subtag_count(data, utf8_num=True ):
-    value  = -1
-    length = -1
+def unpack_ectag_tagcount(data, utf8_num=True ):
 
     if utf8_num:
         return unpack_utf8_num(data)
     else:
         length = 2
-        value, = struct.unpack( '!H', data[:length] )
+        value, _ = unpack_uint16( data )
         return value, data[length:]
 
-def unpack_ectag_tagdata(data, tagtype):
+
+def unpack_ectag_tagdata(data, tagtype, length):
 
     value  = -1
-    length = -1
 
     if tagtype in [ codes2.tagtypes['uint8'] ,
                     codes2.tagtypes['uint16'],
                     codes2.tagtypes['uint32'],
                     codes2.tagtypes['uint64'] ]:
 
-        length = 1
-        if tagtype == codes2.tagtypes['uint16']:
-            length = 2
-        elif tagtype == codes2.tagtypes['uint32']:
-            length = 4
-        elif tagtype == codes2.tagtypes['uint64']:
-            length = 8
+        #length = 1
+        #if tagtype == codes2.tagtypes['uint16']:
+            #length = 2
+        #elif tagtype == codes2.tagtypes['uint32']:
+            #length = 4
+        #elif tagtype == codes2.tagtypes['uint64']:
+            #length = 8
 
         value, data = unpack_uint(data, length)
 
