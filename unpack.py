@@ -2,6 +2,7 @@
 # vim: set fileencoding=utf-8 :
 
 from struct import unpack
+from misc import warning
 
 def unpack_uint(data, length):
 
@@ -88,9 +89,21 @@ def unpack_custom(data, length):
 
     assert len(data) >= length
 
+    warning("custom tyep data encounted, length %d" % length )
+
     custom = data[:length]
 
     return custom, data[length:]
+
+def unpack_known(data, length):
+
+    assert len(data) >= length
+
+    warning("unknown type data encounted, length %d" % length )
+
+    unknown = data[:length]
+
+    return known, data[length:]
 
 def unpack_utf8_num(data):
 

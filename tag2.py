@@ -52,13 +52,13 @@ class ECTag:
 
     def _tagdata_debugrepr(self):
 
-        # since strings are always stored as unicode string,
-        # special treatment is need here.
+        # strings are always stored as unicode string,
+        # special treatment is need for them.
         if self.tagtype == 'string':
             #return self.tagdata
-            return unicode.encode(self.tagdata, "utf-8")
+            return "tagdata: %s " % unicode.encode(self.tagdata, "utf-8")
         else:
-            return str(self.tagdata)
+            return "tagdata: %s " % str(self.tagdata)
 
     def setname(self, tagname):
         assert tagname in codes2.tags.keys()
@@ -179,7 +179,6 @@ def unpack_ectag(data, utf8_num=True):
 
     tagdata_len = taglen - consumed_len
 
-    #print "[debug] tagdata_len: %d" % tagdata_len
     tagdata, data = unpack_ectag_tagdata(data, tagtype, tagdata_len)
 
     tagname =  codes2.tags_rev[tagname]
@@ -187,7 +186,7 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    print tag.debugrepr()
+    #print tag.debugrepr()
 
     # tagname: 2 bytes
     # tagtype: 1 bytes
@@ -280,7 +279,9 @@ def unpack_ectag_tagdata(data, tagtype, length):
         value, data = unpack_custom(data, length)
 
     elif tagtype == codes2.tagtypes['unknown']:
-        raise ValueError("[unpack_ectag_tagdata] type 'unkonwn' is unsupported ")
+        value, data = unpack_unknown(data, length)
+    else:
+        raise ValueError("[unpack_ectag_tagdata] invalid data type is unsupported ")
 
     return value, data
 
