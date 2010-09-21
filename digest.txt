@@ -1,0 +1,139 @@
+[ignored] what the hell?
+op['noop'] = 0x01
+
+# [done] [reqest] initial login request
+op['auth_req'] = 0x02
+# [ignored] [reply] only used by amule core, ignored
+op['auth_fail'] = 0x03
+# [ignored] [reply] only used by server
+op['auth_ok'] = 0x04
+# [ignored] [reply] only used by server
+op['failed'] = 0x05
+
+# [todo] what the hell?
+op['strings'] = 0x06
+
+# [ingored] [reply] as response to 'get_connstate'
+op['misc_data'] = 0x07
+
+# [todo] [request] shutdown amule core
+op['shutdown'] = 0x08
+
+# [todo] [request] add new thing for downloading
+op['add_link'] = 0x09
+
+# [done] [request] get overall status about core
+op['stat_req'] = 0x0A
+
+# [done] [request] get status of connection of this client and core?
+op['get_connstate'] = 0x0B
+
+# [innored] [reply] as response to 'stat_req'
+op['stats'] = 0x0C
+
+# [todo] [reqeust] get down/upload/shared queue
+# FIXME  the reply those there 3 request contain 'custome' data type
+op['get_dload_queue'] = 0x0D
+op['get_uload_queue'] = 0x0E
+op['get_shared_files'] = 0x10
+
+# [todo] [request] what the hell
+op['shared_set_prio'] = 0x11
+
+# [todo] [request]
+op['partfile_remove_no_needed'] = 0x12
+op['partfile_remove_full_queue'] = 0x13
+op['partfile_remove_high_queue'] = 0x14
+op['partfile_cleanup_sources'] = 0x15
+op['partfile_swap_a4af_this'] = 0x16
+op['partfile_swap_a4af_this_auto'] = 0x17
+op['partfile_swap_a4af_others'] = 0x18
+
+# [todo] [request] pause/resume/stop one downloading item
+op['partfile_pause'] = 0x19
+op['partfile_resume'] = 0x1A
+op['partfile_stop'] = 0x1B
+
+# [todo] set priority / cancel/ set category
+op['partfile_prio_set'] = 0x1C
+op['partfile_delete'] = 0x1D
+op['partfile_set_cat'] = 0x1E
+
+# [ignored] [reply] as response to 'get_dload_queue', etc
+op['dload_queue'] = 0x1F
+op['uload_queue'] = 0x20
+op['shared_files'] = 0x22
+
+# [todo] [request]
+op['sharedfiles_reload'] = 0x23
+op['sharedfiles_add_directory'] = 0x24
+op['rename_file'] = 0x25
+
+# [todo] [request]
+op['search_start'] = 0x26
+op['search_stop'] = 0x27
+op['search_results'] = 0x28
+op['search_progress'] = 0x29
+op['download_search_result'] = 0x2A
+op['ipfilter_reload'] = 0x2B
+
+# [done] [request] get all server lists
+op['get_server_list'] = 0x2C
+# [done] [reply] response to 'get_server_list'
+op['server_list'] = 0x2D
+
+# [todo] [request]
+op['server_disconnect'] = 0x2E
+op['server_connect'] = 0x2F
+op['server_remove'] = 0x30
+op['server_add'] = 0x31
+op['server_update_from_url'] = 0x32
+op['addlogline'] = 0x33
+op['adddebuglogline'] = 0x34
+
+# [done] [reuest] get nomal log
+op['get_log'] = 0x35
+# [done] [reqeust] get more detailed log
+op['get_debuglog'] = 0x36
+# [done] [request] get info about current connected ed2k server
+op['get_serverinfo'] = 0x37
+# [ignored] [reply] as response to 'get_log'
+op['log'] = 0x38
+# [ignored] [replay] as response to 'get_debuglog'
+op['debuglog'] = 0x39
+# [ignored] [reply] response to 'get_serverinfo'
+op['serverinfo'] = 0x3A
+
+# [todo] [request]
+op['reset_log'] = 0x3B
+op['reset_debuglog'] = 0x3C
+op['clear_serverinfo'] = 0x3D
+op['get_last_log_entry'] = 0x3E
+
+op['get_preferences'] = 0x3F
+op['set_preferences'] = 0x40
+
+op['create_category'] = 0x41
+op['update_category'] = 0x42
+op['delete_category'] = 0x43
+
+op['get_statsgraphs'] = 0x44
+op['statsgraphs'] = 0x45
+
+op['get_statstree'] = 0x46
+op['statstree'] = 0x47
+
+op['kad_start'] = 0x48
+op['kad_stop'] = 0x49
+op['connect'] = 0x4A
+op['disconnect'] = 0x4B
+op['kad_update_from_url'] = 0x4D
+op['kad_bootstrap_from_ip'] = 0x4E
+
+# [ignored] only used by core
+op['auth_salt'] = 0x4F
+# [done] send salted password for authentication
+op['auth_passwd'] = 0x50
+
+op['ipfilter_update'] = 0x51
+op['get_update'] = 0x52
