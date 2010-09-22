@@ -1,62 +1,34 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-import zlib
 import codes2
 
-from pack import *
-from unpack import unpack_uint8, unpack_uint16
-from tag2 import ECTag, unpack_ectag
+from pack import pack_uint8
+from unpack import unpack_uint8
+from tag2 import ECTag, unpack_ectag, unpack_ectag_tagcount
 from misc import indentext
 
 class ECPacket(ECTag):
-    def __init__(self, op, tags=None):
-        #super(ECPacket, self).__init()
+    def __init__(self, op, subtags=[ ]):
+        ECTag.__init__(self,)
         self.op   = op
+        self.subtags = subtags
 
-        # for self.tags, 'None' and '[ ] 'have different meaning
-        # None means not corrected initializd, some bug exist else where
-        # [ ] means thia ecpacket does not contain tags
-        self.tags = tags
-
-    def _assert(self):
+    def assertself(self):
         assert self.op in codes2.ops.keys()
-        assert self.tags != None
-
-    def debugrepr(self, indent_level=0 ):
-
-        self._assert()
-
-        result = ""
-        result += indentext( self._op_debugrepr(), indent_level )
-        result += indentext( "tagcount: %d \n" % len(self.tags), indent_level )
-
-        for tag in self.tags:
-            result += tag.debugrepr(indent_level + 1)
-
-        return result
-
-
-    def _op_debugrepr(self):
-        opcode = codes2.ops[self.op]
-        #return "op: %s | %s | %d \n" % ( self.op, hex(opcode), opcode )
-        return "op: %s | %s \n" % ( self.op, hex(opcode), )
-        #return "op: %s \n" % ( self.op, )
-
-    def settags(self, tags):
-        assert tags;
-        self.tags = tags
+        for subtag in self.subtags:
+            subtag.assertself()
 
     def pack(self):
 
-        self._assert()
+        self.assertself()
 
         result = ""
 
         result += self._pack_op()
-        result += self._pack_tagscount()
+        result += self._pack_tagcount()
 
-        for tag in self.tags:
+        for tag in self.subtags:
             result += tag.pack()
 
         return result
@@ -65,43 +37,43 @@ class ECPacket(ECTag):
         op = codes2.ops[self.op]
         return pack_uint8(op)
 
-    def _pack_tagscount(self):
-        count = len(self.tags)
-        return pack_uint16(count)
+    def debugrepr(self, indent_level=0 ):
 
+        self.assertself()
+
+        result = ""
+        result += indentext( self._op_debugrepr(), indent_level )
+        result += indentext( "tagcount: %d \n" % len(self.subtags),
+                             indent_level )
+
+        for tag in self.subtags:
+            result += tag.debugrepr(indent_level + 1)
+
+        return result
+
+    def _op_debugrepr(self):
+        opcode = codes2.ops[self.op]
+        #return "op: %s | %s | %d \n" % ( self.op, hex(opcode), opcode )
+        return "op: %s | %s \n" % ( self.op, hex(opcode), )
 
 def unpack_ecpacket(data, utf8_num=True ):
 
-    op, data       = unpack_ecpacket_op(data)
+    op, data = unpack_ecpacket_op(data)
 
     op = codes2.ops_rev[op]
 
-    tagcount, data = unpack_ecpacket_tagcount(data, utf8_num)
+    tagcount, data = unpack_ectag_tagcount(data, utf8_num)
 
-    tags = [ ]
+    subtags = [ ]
 
     for i in range(tagcount):
         tag, data, _ = unpack_ectag(data, utf8_num)
-        tags.append(tag)
+        subtags.append(tag)
 
-    return ECPacket( op, tags)
+    return ECPacket( op, subtags)
 
 def unpack_ecpacket_op(data):
     length =  1
-    value, _= unpack_uint8(data)
+    value, _ = unpack_uint8(data)
 
     return value, data[length:]
-
-def unpack_ecpacket_tagcount(data, utf8_num=True ):
-
-    value  = -1
-    length = -1
-
-    if utf8_num:
-        return unpack_utf8_num(data)
-    else:
-        length = 2
-        value, _ = unpack_uint16( data )
-        return value, data[length:]
-
-

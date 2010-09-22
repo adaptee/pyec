@@ -103,7 +103,7 @@ class ECConnection:
         auth_reply = self.send_and_recv_ecpacket(auth_req)
         print auth_reply.debugrepr()
 
-        salt = auth_reply.tags[0].tagdata
+        salt = auth_reply.subtags[0].tagdata
         #print "[debug] salt: %s" % salt
         saltpasswd_req = self._create_ecpacket_saltpasswd(salt)
         saltpasswd_reply = self.send_and_recv_ecpacket(saltpasswd_req)
@@ -147,14 +147,14 @@ class ECConnection:
     def _create_ecpacket_authreq(self):
         pass
 
-        tags = []
+        subtags = []
 
-        tags.append(ECTag('client_name', 'string', self.app  ) )
-        tags.append(ECTag('client_version', 'string', self.version  ) )
-        tags.append(ECTag('protocol_version', 'uint16', codes2.protocol_version  ) )
-        tags.append(ECTag('passwd_hash', 'hash16', md5(self.password).digest()  ) )
+        subtags.append(ECTag('client_name', 'string', self.app  ) )
+        subtags.append(ECTag('client_version', 'string', self.version  ) )
+        subtags.append(ECTag('protocol_version', 'uint16', codes2.protocol_version  ) )
+        subtags.append(ECTag('passwd_hash', 'hash16', md5(self.password).digest()  ) )
 
-        return ECPacket('auth_req', tags)
+        return ECPacket('auth_req', subtags)
 
     def _create_ecpacket_saltpasswd(self, salt):
 

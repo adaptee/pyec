@@ -62,7 +62,9 @@ class ECTag:
         taglen = len(subtags_bin) + len(tagdata_bin)
         result += pack_uint32(taglen)
 
-        result += self._pack_count()
+        if self.subtags:
+            result += self._pack_tagcount()
+
         result += subtags_bin
         result += tagdata_bin
 
@@ -82,15 +84,11 @@ class ECTag:
 
     # tagtype should use 1 byte
     def _pack_type(self):
-        return pack_uint8(codes2.tagtypes[self.tagtype])
+        return pack_uint8( codes2.tagtypes[self.tagtype] )
 
-    def _pack_count(self):
-        result = ""
 
-        if self.subtags :
-            result +=  pack_uint16( len(self.subtags) )
-
-        return result
+    def _pack_tagcount(self):
+        return pack_uint16( len(self.subtags) )
 
     def _pack_subtags(self):
 
@@ -155,7 +153,6 @@ class ECTag:
         # strings are always stored as unicode string,
         # special treatment is need for them.
         if self.tagtype == 'string':
-            #return self.tagdata
             return "tagdata: %s " % unicode.encode(self.tagdata, "utf-8")
         else:
             return "tagdata: %s " % str(self.tagdata)
@@ -163,24 +160,21 @@ class ECTag:
 def unpack_ectag(data, utf8_num=True):
 
     tagname, data = unpack_ectag_tagname(data, utf8_num)
-    #tagname, has_subtags, subtags = analyze_ectag_tagname(tagname)
     tagname, has_subtags = analyze_ectag_tagname(tagname)
 
     tagtype, data = unpack_tagtype(data)
-
     taglen,  data = unpack_ectag_taglen(data, utf8_num)
 
     consumed_len = 0
-
     subtags = [ ]
 
     if has_subtags :
 
         tagcount, data = unpack_ectag_tagcount(data, utf8_num)
 
-        # CATCH! the value of field taglen did not take optional field tagcount
+        # field taglen did not take the optional field tagcount
         # into consideration
-        # consumed_len += 2
+        # DO NOT add 2 onto consumed_len here!
 
         for i in range(tagcount):
             subtag, data, advance = unpack_ectag(data, utf8_num)

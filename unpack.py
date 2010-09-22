@@ -2,7 +2,7 @@
 # vim: set fileencoding=utf-8 :
 
 from struct import unpack
-from misc import warning
+from misc import warning, info
 
 def unpack_uint(data, length):
 
@@ -21,7 +21,7 @@ def unpack_uint(data, length):
     if fmtstr :
         value, = unpack(fmtstr, data[:length])
     else:
-        raise ValueError("[unpack_uint]: Wrong length for number: %d [%s]"
+        raise ValueError("Wrong length for number: %d [%s]"
                 %(len(data),repr(data)))
 
     return value, data[length:]
@@ -60,14 +60,14 @@ def unpack_hash16(data, length):
     assert length == 16
 
     if len(data) < length:
-        raise ValueError("[unpack_hash16] Expected length 16, got length %d"
+        raise ValueError("Expected length 16, got length %d"
                         % (len(data)) )
 
     return data[:length], data[length:]
 
 def unpack_ipv4(data, length ):
 
-    print "[debug] [unpack_ipv4] parameter length: %d" % length
+    info( "[unpack_ipv4] parameter length: %d" % length )
 
     assert len(data) >= length
 
