@@ -64,7 +64,7 @@ def unpack_hash16(data, length):
         raise ValueError("[unpack_hash16] Expected length 16, got length %d"
                         % (len(data)) )
 
-    return data, data[length:]
+    return data[:length], data[length:]
 
 def unpack_ipv4(data, length ):
 

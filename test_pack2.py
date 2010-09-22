@@ -111,8 +111,7 @@ def test_pack_unpack_complex_tag():
     subtag2 = ECTag('server_address', 'ipv4', "192.168.1.37:9527")
     subtag3 = ECTag('server_users', 'uint32', 0x5a5a)
 
-    #subtags = [ subtag1, subtag2, subtag3]
-    subtags = [ subtag1]
+    subtags = [ subtag1, subtag2, subtag3]
     maintag  = ECTag('server', 'string', "aMule Server No2", subtags)
 
     maintag_bin = maintag.pack()

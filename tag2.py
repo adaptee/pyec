@@ -195,7 +195,7 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    print tag.debugrepr()
+    #print tag.debugrepr()
 
     # tagname: 2 bytes
     # tagtype: 1 bytes
