@@ -11,12 +11,12 @@ def test_pack_string_success():
     assert pack_string(u'test') == 'test\x00'
 
 def test_pack_hash_success():
-    print pack_hash('0123456789abcdef')
-    assert pack_hash('0123456789abcdef') == '0123456789abcdef'
+    print pack_hash16('0123456789abcdef')
+    assert pack_hash16('0123456789abcdef') == '0123456789abcdef'
 
 def test_pack_hash_failure():
     try:
-        pack_hash('too short')
+        pack_hash16('too short')
     except ValueError:
         pass
 
@@ -79,8 +79,8 @@ def test_unpack_string():
 
 def test_unpack_hash():
     test_in = 'abcdef0123456789'
-    test_bin = pack_hash(test_in)
-    test_out, length = unpack_hash(test_bin)
+    test_bin = pack_hash16(test_in)
+    test_out, length = unpack_hash16(test_bin)
     assert test_out == test_in
 
 def test_unpack_ipv4():

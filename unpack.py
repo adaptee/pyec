@@ -52,7 +52,6 @@ def unpack_string(data, length):
 
     value = unicode(data[:index],"utf8")
 
-
     # skip that extra \x00
     return value, data[index + 1 :]
 
@@ -95,7 +94,7 @@ def unpack_custom(data, length):
 
     return custom, data[length:]
 
-def unpack_known(data, length):
+def unpack_unknown(data, length):
 
     assert len(data) >= length
 

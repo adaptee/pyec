@@ -3,7 +3,7 @@
 
 from struct import pack
 
-def ipv4addr2num(addr):
+def _ipv4addr2num(addr):
 
     ip, port = addr.split(':')
 
@@ -22,7 +22,7 @@ def pack_string(data):
     data += u'\0'
     return unicode.encode(data,"utf-8")
 
-def pack_hash(hash):
+def pack_hash16(hash):
 
     if len(hash) != 16:
         raise ValueError('[pack_hash] length of hash is not 16 bytes')
@@ -31,7 +31,7 @@ def pack_hash(hash):
 
 def pack_ipv4(ipv4addr):
 
-    ipv4, port = ipv4addr2num(ipv4addr)
+    ipv4, port = _ipv4addr2num(ipv4addr)
 
     return pack("!LH", ipv4, port)
 
