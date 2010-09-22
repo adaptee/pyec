@@ -5,13 +5,15 @@ import zlib
 import codes2
 
 
+
 from pack import *
 from unpack import unpack_uint8, unpack_uint16
-from tag2 import unpack_ectag
+from tag2 import ECTag, unpack_ectag
 from misc import indentext
 
 class ECPacket:
     def __init__(self, op, tags=None):
+        #super(ECPacket, self).__init()
         self.op   = op
 
         # for self.tags, 'None' and '[ ] 'have different meaning

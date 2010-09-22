@@ -91,7 +91,6 @@ class ECTag:
 
         result += self._pack_name()
         result += self._pack_type()
-        result += self._pack_count()
 
         subtags_bin = self._pack_subtags()
         tagdata_bin = self._pack_data()
@@ -99,6 +98,8 @@ class ECTag:
         taglen = len(subtags_bin) + len(tagdata_bin)
 
         result += pack_uint32(taglen)
+
+        result += self._pack_count()
         result += subtags_bin
         result += tagdata_bin
 
@@ -194,7 +195,7 @@ def unpack_ectag(data, utf8_num=True):
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
-    #print tag.debugrepr()
+    print tag.debugrepr()
 
     # tagname: 2 bytes
     # tagtype: 1 bytes
