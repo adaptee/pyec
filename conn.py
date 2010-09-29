@@ -9,7 +9,7 @@ from hashlib import md5
 import codes2
 
 from tag2 import ECTag
-from packet2 import ECPacket, unpack_ecpacket
+from packet import ECPacket, unpack_ecpacket
 from rawpacket import ECRawPacket, unpack_rawpacket_header, unpack_rawpacket_data
 
 class ConnectionFailedError(Exception):
