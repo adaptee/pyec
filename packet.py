@@ -5,7 +5,7 @@ import codes2
 
 from pack import pack_uint8
 from unpack import unpack_uint8
-from tag2 import ECTag, unpack_ectag, unpack_ectag_tagcount
+from tag import ECTag, unpack_ectag, unpack_ectag_tagcount
 from misc import indentext
 
 class ECPacket(ECTag):

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-from tag2 import ECTag
+from tag import ECTag
 
 def test_ECTag_0():
 

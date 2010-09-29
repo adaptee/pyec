@@ -3,7 +3,7 @@
 
 from pack import *
 from unpack import *
-from tag2 import ECTag, unpack_ectag
+from tag import ECTag, unpack_ectag
 
 
 def test_pack_string_success():
