@@ -1,4 +1,4 @@
-[ignored] what the hell?
+[ignored] [reply] dummy reply, no meaning
 op['noop'] = 0x01
 
 # [done] [reqest] initial login request
@@ -10,16 +10,16 @@ op['auth_ok'] = 0x04
 # [ignored] [reply] only used by server
 op['failed'] = 0x05
 
-# [todo] what the hell?
+# [ignored] [reply] as response to xxxx
 op['strings'] = 0x06
 
 # [ingored] [reply] as response to 'get_connstate'
 op['misc_data'] = 0x07
 
-# [todo] [request] shutdown amule core
+# [done] [request] shutdown amule core
 op['shutdown'] = 0x08
 
-# [todo] [request] add new thing for downloading
+# [done] [request] add new link for downloading
 op['add_link'] = 0x09
 
 # [done] [request] get overall status about core
@@ -31,8 +31,7 @@ op['get_connstate'] = 0x0B
 # [innored] [reply] as response to 'stat_req'
 op['stats'] = 0x0C
 
-# [todo] [reqeust] get down/upload/shared queue
-# FIXME  the reply those there 3 request contain 'custome' data type
+# [done] [reqeust] get down/upload/shared queue
 op['get_dload_queue'] = 0x0D
 op['get_uload_queue'] = 0x0E
 op['get_shared_files'] = 0x10
@@ -49,7 +48,7 @@ op['partfile_swap_a4af_this'] = 0x16
 op['partfile_swap_a4af_this_auto'] = 0x17
 op['partfile_swap_a4af_others'] = 0x18
 
-# [todo] [request] pause/resume/stop one downloading item
+# [done] [request] pause/resume/stop one downloading item
 op['partfile_pause'] = 0x19
 op['partfile_resume'] = 0x1A
 op['partfile_stop'] = 0x1B
@@ -64,17 +63,26 @@ op['dload_queue'] = 0x1F
 op['uload_queue'] = 0x20
 op['shared_files'] = 0x22
 
-# [todo] [request]
+# [done] [request] relading shared files
 op['sharedfiles_reload'] = 0x23
+
 op['sharedfiles_add_directory'] = 0x24
+# [todo][request]  give file a better name
 op['rename_file'] = 0x25
 
-# [todo] [request]
+# [done] [request] ask core to do searching operation
 op['search_start'] = 0x26
+# [done] [request] ask core to stop searching operation
 op['search_stop'] = 0x27
+# [done] [request] ask core to return the results of last search
 op['search_results'] = 0x28
+
+# [broken] [request & reply]  how much is the searhcing done?
 op['search_progress'] = 0x29
+
 op['download_search_result'] = 0x2A
+
+# [done] [request] reloading ipfilter data
 op['ipfilter_reload'] = 0x2B
 
 # [done] [request] get all server lists
@@ -82,12 +90,16 @@ op['get_server_list'] = 0x2C
 # [done] [reply] response to 'get_server_list'
 op['server_list'] = 0x2D
 
-# [todo] [request]
+# [done] [request] ast remote core to disconnect from SPECIFED ed2k server
 op['server_disconnect'] = 0x2E
+# [done] [request] ast remote core to connect to SPECIFED ed2k server
 op['server_connect'] = 0x2F
+
+
 op['server_remove'] = 0x30
 op['server_add'] = 0x31
 op['server_update_from_url'] = 0x32
+
 op['addlogline'] = 0x33
 op['adddebuglogline'] = 0x34
 
@@ -104,12 +116,15 @@ op['debuglog'] = 0x39
 # [ignored] [reply] response to 'get_serverinfo'
 op['serverinfo'] = 0x3A
 
-# [todo] [request]
+# [done] [request] clear the log file
 op['reset_log'] = 0x3B
+# [done] [request] clear the debug log file
 op['reset_debuglog'] = 0x3C
+
 op['clear_serverinfo'] = 0x3D
 op['get_last_log_entry'] = 0x3E
 
+# [todo]
 op['get_preferences'] = 0x3F
 op['set_preferences'] = 0x40
 
@@ -117,16 +132,23 @@ op['create_category'] = 0x41
 op['update_category'] = 0x42
 op['delete_category'] = 0x43
 
+# [todo] [request/reply]  statistics graph
 op['get_statsgraphs'] = 0x44
 op['statsgraphs'] = 0x45
 
+# [done] [request/reply]  statistics tree
 op['get_statstree'] = 0x46
 op['statstree'] = 0x47
 
+# [done] [request] ask remote core to connect/disconnect to/from kad network
 op['kad_start'] = 0x48
 op['kad_stop'] = 0x49
+
+# [done] [request] ask core to connect to ed2k&kad  networks
 op['connect'] = 0x4A
+# [done] [request] ask core to disconnect from ed2k&kad networks
 op['disconnect'] = 0x4B
+
 op['kad_update_from_url'] = 0x4D
 op['kad_bootstrap_from_ip'] = 0x4E
 

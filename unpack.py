@@ -82,13 +82,13 @@ def unpack_ipv4(data, length ):
     return value, data[length:]
 
 def unpack_double(data, length):
-    return unpack_string(data)
+    return unpack_string(data, length)
 
 def unpack_custom(data, length):
 
     assert len(data) >= length
 
-    warning("custom tyep data encounted, length %d" % length )
+    warning("custom type data encounted, length %d" % length )
 
     custom = data[:length]
 
