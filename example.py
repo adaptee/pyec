@@ -2,8 +2,8 @@
 # vim: set fileencoding=utf-8 :
 
 
-import conn2
+import conn
 
-c = conn2.ECConnection("touchme")
+c = conn.ECConnection("touchme")
 
 #print u"你好"
