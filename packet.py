@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-import codes2
+import codes
 
 from pack import pack_uint8
 from unpack import unpack_uint8
@@ -15,7 +15,7 @@ class ECPacket(ECTag):
         self.subtags = subtags
 
     def assertself(self):
-        assert self.op in codes2.ops.keys()
+        assert self.op in codes.ops.keys()
         for subtag in self.subtags:
             subtag.assertself()
 
@@ -34,7 +34,7 @@ class ECPacket(ECTag):
         return result
 
     def _pack_op(self):
-        op = codes2.ops[self.op]
+        op = codes.ops[self.op]
         return pack_uint8(op)
 
     def debugrepr(self, indent_level=0 ):
@@ -52,7 +52,7 @@ class ECPacket(ECTag):
         return result
 
     def _op_debugrepr(self):
-        opcode = codes2.ops[self.op]
+        opcode = codes.ops[self.op]
         #return "op: %s | %s | %d \n" % ( self.op, hex(opcode), opcode )
         return "op: %s | %s \n" % ( self.op, hex(opcode), )
 
@@ -60,7 +60,7 @@ def unpack_ecpacket(data, utf8_num=True ):
 
     op, data = unpack_ecpacket_op(data)
 
-    op = codes2.ops_rev[op]
+    op = codes.ops_rev[op]
 
     tagcount, data = unpack_ectag_tagcount(data, utf8_num)
 

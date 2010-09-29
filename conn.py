@@ -6,7 +6,7 @@ import time
 import socket
 from hashlib import md5
 
-import codes2
+import codes
 
 from tag import ECTag
 from packet import ECPacket, unpack_ecpacket
@@ -30,7 +30,7 @@ def create_salted_passwd_hash(passwd, salt):
 def create_ecpacket_status_req():
 
     return ECPacket( 'stat_req',
-                     [ ECTag('detail_level', 'uint8', codes2.details['cmd']),  ]
+                     [ ECTag('detail_level', 'uint8', codes.details['cmd']),  ]
                    )
 
 def create_ecpacket_get_connstat_req():
@@ -168,21 +168,21 @@ def create_ecpacket_search_start_req(search_type, search_name):
 # only search current connected ed2k server
 def create_ecpacket_search_local_req(search_name):
 
-    return create_ecpacket_search_start_req( codes2.searchs['local'],
+    return create_ecpacket_search_start_req( codes.searchs['local'],
                                              search_name
                                            )
 
 # search all ed2k servers in the server list
 def create_ecpacket_search_global_req(search_name):
 
-    return create_ecpacket_search_start_req( codes2.searchs['global'],
+    return create_ecpacket_search_start_req( codes.searchs['global'],
                                              search_name
                                            )
 
 # search the kad network
 def create_ecpacket_search_kad_req(search_name):
 
-    return create_ecpacket_search_start_req( codes2.searchs['kad'],
+    return create_ecpacket_search_start_req( codes.searchs['kad'],
                                              search_name
                                            )
 
@@ -198,7 +198,7 @@ def create_ecpacket_search_stop_req():
 
 def create_ecpacket_search_results_req():
     return ECPacket( 'search_results',
-                     [ECTag('detail_level','uint8', codes2.details['full'] ) ]
+                     [ECTag('detail_level','uint8', codes.details['full'] ) ]
                     )
 
 
@@ -457,7 +457,7 @@ class ECConnection:
 
         subtags.append(ECTag('client_name', 'string', self.app  ) )
         subtags.append(ECTag('client_version', 'string', self.version  ) )
-        subtags.append(ECTag('protocol_version', 'uint16', codes2.protocol_version  ) )
+        subtags.append(ECTag('protocol_version', 'uint16', codes.protocol_version  ) )
         subtags.append(ECTag('passwd_hash', 'hash16', md5(self.password).digest()  ) )
 
         return ECPacket('auth_req', subtags)
@@ -502,7 +502,7 @@ class ECConnection:
 
         data = unpack_rawpacket_data(rawdata, flag)
 
-        utf8_num = (flag & codes2.flags['utf8_numbers'] != 0)
+        utf8_num = (flag & codes.flags['utf8_numbers'] != 0)
 
         return unpack_ecpacket(data, utf8_num)
 

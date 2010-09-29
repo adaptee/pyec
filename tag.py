@@ -3,7 +3,7 @@
 
 import struct
 
-import codes2
+import codes
 from pack import pack_uint8, pack_uint16, pack_uint32, pack_uint, \
                  pack_string, pack_double, pack_ipv4, pack_hash16
 from unpack import unpack_uint8, unpack_uint16, unpack_uint32, unpack_uint, \
@@ -23,8 +23,8 @@ class ECTag:
 
     def assertself(self):
         """ called befor packing, or after unpacking"""
-        assert self.tagname in codes2.tags.keys()
-        assert self.tagtype in codes2.tagtypes.keys()
+        assert self.tagname in codes.tags.keys()
+        assert self.tagtype in codes.tagtypes.keys()
         for subtag in self.subtags:
             subtag.assertself()
 
@@ -72,7 +72,7 @@ class ECTag:
 
     def _pack_name(self):
 
-        tagname = codes2.tags[self.tagname]
+        tagname = codes.tags[self.tagname]
 
         if self.subtags :
             tagname = tagname * 2 + 1
@@ -84,7 +84,7 @@ class ECTag:
 
     # tagtype should use 1 byte
     def _pack_type(self):
-        return pack_uint8( codes2.tagtypes[self.tagtype] )
+        return pack_uint8( codes.tagtypes[self.tagtype] )
 
 
     def _pack_tagcount(self):
@@ -139,12 +139,12 @@ class ECTag:
         return result
 
     def _tagname_debugrepr(self):
-        tagnamecode = codes2.tags[self.tagname]
+        tagnamecode = codes.tags[self.tagname]
 
         return "tagname: %s | %s \n" % ( self.tagname, hex(tagnamecode) )
 
     def _tagtype_debugrepr(self):
-        tagtypecode = codes2.tagtypes[self.tagtype]
+        tagtypecode = codes.tagtypes[self.tagtype]
 
         return "tagtype: %s | %s \n" % ( self.tagtype, hex(tagtypecode) )
 
@@ -185,8 +185,8 @@ def unpack_ectag(data, utf8_num=True):
 
     tagdata, data = unpack_ectag_tagdata(data, tagtype, tagdata_len)
 
-    tagname =  codes2.tags_rev[tagname]
-    tagtype =  codes2.tagtypes_rev[tagtype]
+    tagname =  codes.tags_rev[tagname]
+    tagtype =  codes.tagtypes_rev[tagtype]
 
     tag = ECTag(tagname, tagtype, tagdata, subtags)
 
@@ -259,30 +259,30 @@ def unpack_ectag_tagdata(data, tagtype, length):
 
     value  = -1
 
-    if tagtype in [ codes2.tagtypes['uint8'] ,
-                    codes2.tagtypes['uint16'],
-                    codes2.tagtypes['uint32'],
-                    codes2.tagtypes['uint64'] ]:
+    if tagtype in [ codes.tagtypes['uint8'] ,
+                    codes.tagtypes['uint16'],
+                    codes.tagtypes['uint32'],
+                    codes.tagtypes['uint64'] ]:
 
         value, data = unpack_uint(data, length)
 
-    elif tagtype == codes2.tagtypes['string']  :
+    elif tagtype == codes.tagtypes['string']  :
         value, data = unpack_string(data, length)
 
-    elif tagtype == codes2.tagtypes['hash16']:
+    elif tagtype == codes.tagtypes['hash16']:
         value, data = unpack_hash16(data, length)
 
-    elif tagtype == codes2.tagtypes['ipv4']:
+    elif tagtype == codes.tagtypes['ipv4']:
         value, data = unpack_ipv4(data, length)
 
-    elif tagtype == codes2.tagtypes['double']:
+    elif tagtype == codes.tagtypes['double']:
         value, data = unpack_double(data, length)
 
-    elif tagtype == codes2.tagtypes['custom']:
+    elif tagtype == codes.tagtypes['custom']:
         #raise ValueError("[unpack_ectag_tagdata] type 'custom' is unsupported ")
         value, data = unpack_custom(data, length)
 
-    elif tagtype == codes2.tagtypes['unknown']:
+    elif tagtype == codes.tagtypes['unknown']:
         value, data = unpack_unknown(data, length)
     else:
         raise ValueError("invalid data type %d " % tagtype)

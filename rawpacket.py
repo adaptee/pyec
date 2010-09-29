@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-import codes2
+import codes
 
 from pack import *
 from unpack import *
@@ -11,7 +11,7 @@ class ECRawPacket:
     # current, only use the simplest flag when sending data
     # of course, we still support other advanced features when
     # dealying with received data.
-    def __init__(self, packet, flag=codes2.flags['base'] ):
+    def __init__(self, packet, flag=codes.flags['base'] ):
         self.flag = flag
         self.packet = packet
 
@@ -43,7 +43,7 @@ class ECRawPacket:
         return result
 
     def _compress_data(self, data):
-        if self.flag & codes2.flags['zlib'] :
+        if self.flag & codes.flags['zlib'] :
             return  zlib.compress(data)
         else:
             return data
@@ -63,7 +63,7 @@ def unpack_rawpacket_header(header):
 
 def unpack_rawpacket_data(data, flag):
 
-    if (flag & codes2.flags['zlib']):
+    if (flag & codes.flags['zlib']):
         return zlib.decompress(data)
     else:
         return data
